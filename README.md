@@ -49,6 +49,12 @@ Decide what shape of data to send from a Next.js Server Component to a Client Co
 ### `nextjs-og-image-metadata`
 Avoid the `generateImageMetadata` footgun in dynamic OG image routes. If misused, every page in `[id]/opengraph-image.tsx` gets `<meta og:image>` tags for ALL siblings — RSC payload bloats 5–10×. Includes a scanner.
 
+### `nextjs-browserslist-turbopack`
+Force modern-target browser compilation in Next 16 + Turbopack. `package.json` `browserslist` is silently ignored; use `.browserslistrc` to drop ~14KB of legacy method polyfills. Includes a polyfill scanner.
+
+### `nextjs-preconnect-strategy`
+Decide where to put `<link rel="preconnect">` in App Router — root layout vs per-page. Avoids "Unused preconnect" / ">4 preconnects" Lighthouse warnings. Covers preconnect vs dns-prefetch trade-off.
+
 ---
 
 ## Structure
