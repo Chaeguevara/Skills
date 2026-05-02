@@ -2,7 +2,7 @@
 
 Claude Code skills for persistent knowledge and automation across every session.
 
-## Available Skills
+## Reference / domain knowledge
 
 ### `geometric-folding`
 Reference knowledge base for mathematical and computational origami. Loaded automatically when any session touches folding theory.
@@ -27,6 +27,25 @@ Creates today's daily note in the Obsidian PARA vault (`00.Inbox/YYYY-MM-DD.md`)
 
 Files: `SKILL.md`
 
+## Web / Next.js gotchas (general)
+
+These capture footguns I've stepped on more than once. Each is a self-contained `SKILL.md` with reproducer + fix.
+
+### `nextjs-adsense-script`
+Add Google AdSense to a Next.js App Router site without breaking the `data-nscript` validator. Use raw `<script>` JSX or lazy DOM injection — never `next/script` directly.
+
+### `nextjs-search-params-ssg`
+Read `?foo=bar` query params in a fully static page without breaking SSG. `useSearchParams()` requires a Suspense boundary; use `window.location.search` in `useEffect` for cosmetic flags.
+
+### `nextjs-cls-korean-fonts`
+Fix Cumulative Layout Shift caused by Korean web fonts loaded via `next/font/google`. `display: "optional"` + `preload: false` eliminates the swap-driven reflow.
+
+### `ssg-determinism`
+Pre-compute clusters / samples / rankings at build time without breaking deterministic builds. Replace `Math.random` with seeded RNG or max-min-distance init.
+
+### `rsc-client-prop-shape`
+Decide what shape of data to send from a Next.js Server Component to a Client Component. Project to compact form before passing — large props inflate the page HTML and hurt LCP.
+
 ---
 
 ## Structure
@@ -34,12 +53,13 @@ Files: `SKILL.md`
 ```
 skills/
 ├── geometric-folding/
-│   ├── SKILL.md            # Main reference (auto-loaded)
-│   └── theorems-deep.md    # Extended proofs & algorithms
 ├── obsidian-knowledge/
-│   ├── SKILL.md
-│   ├── frontmatter-patterns.md
-│   └── vault-index.md
-└── obsidian-daily/
-    └── SKILL.md
+├── obsidian-daily/
+├── nextjs-adsense-script/
+├── nextjs-search-params-ssg/
+├── nextjs-cls-korean-fonts/
+├── ssg-determinism/
+└── rsc-client-prop-shape/
 ```
+
+Each directory contains `SKILL.md` (frontmatter + body) and optionally extra reference files.
