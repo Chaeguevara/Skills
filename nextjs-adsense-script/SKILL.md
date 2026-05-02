@@ -69,3 +69,11 @@ google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
 - ❌ `<Script src="..adsbygoogle.js" />` — adds `data-nscript`, fails validation
 - ❌ Putting the AdSense script in a client component — duplicates loads on navigation
 - ❌ Forgetting `crossOrigin="anonymous"` — required by AdSense
+
+## More
+
+- `reference.md` — full layout.tsx for both patterns, in-content `<ins>` ad slot pattern, ads.txt details, why next/script adds `data-nscript`
+- `scripts/audit.sh` — run from project root to check ads.txt presence, detect the anti-pattern, verify preconnect
+  ```bash
+  bash ~/.claude/skills/nextjs-adsense-script/scripts/audit.sh /path/to/project
+  ```

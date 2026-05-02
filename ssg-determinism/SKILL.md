@@ -86,3 +86,11 @@ npm run build && diff -r data/clustered data/clustered-1
 ```
 
 Or in CI: assert `git diff --exit-code data/` after the build step.
+
+## More
+
+- `reference.md` — drop-in deterministic K-means + mulberry32 seeded RNG + table of nondeterminism sources beyond Math.random
+- `scripts/verify.sh` — run a build/ingest command twice and diff the output dir
+  ```bash
+  bash ~/.claude/skills/ssg-determinism/scripts/verify.sh "npm run ingest:postpartum-care" data/parenting
+  ```

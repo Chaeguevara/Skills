@@ -50,3 +50,11 @@ Trade-off: first-time visitors may see fallback font on slow networks. Acceptabl
 ```
 
 After this fix, CLS from font swap should be 0. Remaining CLS comes from images without dimensions, ads, or JS-driven layout (see `nextjs-cls-mobile-layout` skill).
+
+## More
+
+- `reference.md` — common Korean fonts (Noto Sans KR / Pretendard / Spoqa) with full configs, CSS fallback chain that looks native, why subsetting Korean Unicode doesn't help
+- `scripts/check-fonts.sh` — audit `display`, `preload`, `subsets` for any Korean font import
+  ```bash
+  bash ~/.claude/skills/nextjs-cls-korean-fonts/scripts/check-fonts.sh /path/to/project
+  ```

@@ -65,3 +65,11 @@ Some interactive maps/graphs do need the full dataset client-side. In that case:
 - Fetch it client-side from a JSON file (cacheable by CDN, separate from HTML)
 - `fetch('/data/centers.json')` in a `useEffect`
 - Page HTML stays small; data loads in parallel and is cached separately
+
+## More
+
+- `reference.md` — `projectById` helper, two split-fetch patterns (route vs. emit-to-public), measurement, decision rubric by data size
+- `scripts/measure.sh` — list prerendered HTML/RSC sizes after a build, flag anything over a configurable limit
+  ```bash
+  bash ~/.claude/skills/rsc-client-prop-shape/scripts/measure.sh /path/to/project 200
+  ```

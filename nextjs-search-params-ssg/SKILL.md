@@ -61,3 +61,11 @@ Page becomes partially dynamic — search engines still see the fallback, but yo
 
 Cosmetic / behavioral param (debug, beta, theme): `window.location` workaround.
 Content-shape param (filter, sort that affects what gets rendered): Suspense + `useSearchParams`.
+
+## More
+
+- `reference.md` — decision tree, drop-in `useStaticSearchParam` hook, full Suspense pattern, why `useSearchParams` is dynamic, related patterns
+- `scripts/scan.sh` — scan a project for `useSearchParams` call sites and report whether each is in a Suspense boundary or `force-dynamic` page
+  ```bash
+  bash ~/.claude/skills/nextjs-search-params-ssg/scripts/scan.sh /path/to/project
+  ```
