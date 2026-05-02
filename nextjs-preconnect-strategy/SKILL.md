@@ -66,6 +66,46 @@ Use cases:
 - ❌ Forgetting `crossOrigin="anonymous"` — for CORS-required resources, the preconnect doesn't apply
 - ❌ Putting Kakao/Maps preconnect in root layout when only one route uses the map
 
+## crossorigin mismatch — the silent killer
+
+The most subtle bug: **preconnect's `crossorigin` attribute MUST match how the actual resource request is made**, otherwise the browser opens a SECOND connection and your preconnect was wasted.
+
+| Resource type | Actual fetch behavior | Required preconnect |
+|---|---|---|
+| `<script src="...">` (no `crossorigin`) | sends without `Origin` header | `<link rel="preconnect" href="...">` (no crossOrigin) |
+| `<script src="..." crossorigin="anonymous">` | sends `Origin: ...` | `<link rel="preconnect" crossOrigin="anonymous">` |
+| `<img src="..." crossorigin="anonymous">` | sends `Origin: ...` | `<link rel="preconnect" crossOrigin="anonymous">` |
+| `<img src="...">` (no crossorigin) | no `Origin` header | `<link rel="preconnect" href="...">` (no crossOrigin) |
+| `next/font/google` woff2 | always `crossorigin="anonymous"` | `<link rel="preconnect" crossOrigin="anonymous">` |
+| AdSense `adsbygoogle.js` | always `crossorigin="anonymous"` (required) | `<link rel="preconnect" crossOrigin="anonymous">` |
+
+Lighthouse reports this as **"Unused preconnect. Check that the crossorigin attribute is used properly."** even though the origin is correct.
+
+### Real-world example (Kakao Map)
+
+Kakao Maps SDK script is loaded WITHOUT crossorigin (the SDK loader appends a plain `<script src="...">`). Tile PNGs are also fetched without crossorigin. So:
+
+```tsx
+// ❌ Wasted preconnect — mismatch
+<link rel="preconnect" href="https://dapi.kakao.com" crossOrigin="anonymous" />
+<link rel="preconnect" href="https://t1.daumcdn.net" crossOrigin="anonymous" />
+
+// ✅ Matches the actual SDK + tile requests
+<link rel="preconnect" href="https://dapi.kakao.com" />
+<link rel="preconnect" href="https://t1.daumcdn.net" />
+<link rel="preconnect" href="https://mts.daumcdn.net" />
+```
+
+### How to verify
+
+1. **Lighthouse "Preconnected origins" insight** — flagged as "Unused preconnect" if mismatch
+2. **DevTools Network tab** — first request to the origin should show `Connection: 0ms` (already established). If it shows full handshake (DNS+TLS), preconnect didn't work.
+3. **`Connection: keep-alive`** alone isn't enough — the connection must be opened on the SAME origin AND the SAME credentials mode.
+
+### Quick check
+
+Before adding `crossOrigin="anonymous"`, find a real network request to that origin and look at its `crossorigin` attribute / `Sec-Fetch-Mode` header. Match exactly.
+
 ## Verify
 
 ```bash

@@ -66,6 +66,45 @@ Some interactive maps/graphs do need the full dataset client-side. In that case:
 - `fetch('/data/centers.json')` in a `useEffect`
 - Page HTML stays small; data loads in parallel and is cached separately
 
+### Real-world example — page HTML 1MB → 27KB
+
+A map page passing `centers: PostpartumCareCenter[]` (472 rows) + `vectors` + `nearbyMeta` + `hospitals` + `districtAvgs` to a client component was producing 998KB SSR HTML. The single largest `<script>self.__next_f.push(...)` blob was 345KB — the serialized prop tree.
+
+Fix:
+1. **Static JSON route handler** at `app/data/<bundle-name>.json/route.ts`:
+   ```ts
+   import { NextResponse } from "next/server";
+   export const dynamic = "force-static";
+   export const revalidate = false;
+   export function GET() {
+     return NextResponse.json({ centers, vectors, nearbyMeta, hospitals, districtAvgs });
+   }
+   ```
+   Built once, served as a static file with CDN caching.
+
+2. **Client component fetches on mount**, replaces all heavy props:
+   ```tsx
+   "use client";
+   const [bundle, setBundle] = useState<Bundle | null>(null);
+   useEffect(() => {
+     fetch("/data/postpartum-bundle.json").then((r) => r.json()).then(setBundle);
+   }, []);
+   const centers = useMemo(() => bundle?.centers ?? [], [bundle]);
+   // … other slices
+   ```
+   `useMemo` for each slice keeps reference stability for downstream `useMemo` deps.
+
+3. **Server page** keeps only what the SSR header / metadata needs:
+   ```tsx
+   const placedCount = loadCenters().filter((c) => c.position).length;
+   // …header SSR with placedCount
+   <ClientMapView />  // no data props
+   ```
+
+Result: 998KB → 27KB HTML. Bundle JSON 300KB but cached separately by CDN.
+
+Trade-off: First-paint UI shows skeleton until fetch completes (~200ms). Acceptable for interactive maps where the map widget itself takes longer to render anyway.
+
 ## More
 
 - `reference.md` — `projectById` helper, two split-fetch patterns (route vs. emit-to-public), measurement, decision rubric by data size

@@ -53,7 +53,10 @@ Avoid the `generateImageMetadata` footgun in dynamic OG image routes. If misused
 Force modern-target browser compilation in Next 16 + Turbopack. `package.json` `browserslist` is silently ignored; use `.browserslistrc` to drop ~14KB of legacy method polyfills. Includes a polyfill scanner.
 
 ### `nextjs-preconnect-strategy`
-Decide where to put `<link rel="preconnect">` in App Router — root layout vs per-page. Avoids "Unused preconnect" / ">4 preconnects" Lighthouse warnings. Covers preconnect vs dns-prefetch trade-off.
+Decide where to put `<link rel="preconnect">` in App Router — root layout vs per-page. Avoids "Unused preconnect" / ">4 preconnects" Lighthouse warnings. Covers the silent-killer crossorigin mismatch (preconnect's `crossOrigin` must match the actual fetch's mode) + preconnect vs dns-prefetch trade-off.
+
+### `nextjs-conditional-feature-bundling`
+Chunk-split conditional features (`?beta=1`, modals, admin panels) so they only download when triggered. Components via `next/dynamic`, libraries via `import()` inside `useEffect`. Includes a scanner for static-import + conditional-render candidates.
 
 ---
 
