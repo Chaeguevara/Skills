@@ -46,6 +46,9 @@ Pre-compute clusters / samples / rankings at build time without breaking determi
 ### `rsc-client-prop-shape`
 Decide what shape of data to send from a Next.js Server Component to a Client Component. Project to compact form before passing — large props inflate the page HTML and hurt LCP.
 
+### `nextjs-og-image-metadata`
+Avoid the `generateImageMetadata` footgun in dynamic OG image routes. If misused, every page in `[id]/opengraph-image.tsx` gets `<meta og:image>` tags for ALL siblings — RSC payload bloats 5–10×. Includes a scanner.
+
 ---
 
 ## Structure
