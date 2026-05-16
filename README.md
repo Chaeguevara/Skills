@@ -58,20 +58,31 @@ Decide where to put `<link rel="preconnect">` in App Router — root layout vs p
 ### `nextjs-conditional-feature-bundling`
 Chunk-split conditional features (`?beta=1`, modals, admin panels) so they only download when triggered. Components via `next/dynamic`, libraries via `import()` inside `useEffect`. Includes a scanner for static-import + conditional-render candidates.
 
+### `bulk-data-via-script-not-tokens`
+대량 데이터(공공 API, 엑셀, CSV, 페이지네이션 응답)를 토큰으로 처리하지 않고 데이터 구조를 이해한 뒤 스크립트로 옮기는 패턴. probe → script → metrics-only report. 한글 정규화, 페이지네이션, 매칭 폴백 체인 포함.
+
 ---
 
 ## Structure
 
+Each skill is a directory containing `SKILL.md` (frontmatter + body). Some skills also bundle reference scripts/templates that the body links to:
+
 ```
 skills/
-├── geometric-folding/
-├── obsidian-knowledge/
-├── obsidian-daily/
-├── nextjs-adsense-script/
-├── nextjs-search-params-ssg/
-├── nextjs-cls-korean-fonts/
-├── ssg-determinism/
-└── rsc-client-prop-shape/
+├── data-go-kr-api-quirks/
+│   ├── SKILL.md
+│   ├── probe-endpoint.sh        # bash probe for /info /list /v1 path discovery
+│   └── ingest-skeleton.mts      # reusable TS ingest with pagination + matching
+├── tier-grading-system/
+│   ├── SKILL.md
+│   └── calibrate-thresholds.mjs # feed scores → recommend S/A/B/C/D thresholds
+├── click-anchor-similarity/
+│   ├── SKILL.md
+│   └── example-implementation.ts  # cosine similarity + autoWeights + rank
+├── nextjs-static-route-bundle/
+│   ├── SKILL.md
+│   └── route-template.ts        # copy-paste route handler + client fetch
+└── ...                          # other skills (markdown only when self-contained)
 ```
 
-Each directory contains `SKILL.md` (frontmatter + body) and optionally extra reference files.
+When a skill has a "Bundled tool" callout near the top of its SKILL.md, that means it ships with reusable scripts. Single-md skills are self-contained patterns where the inline code snippet is enough.
